@@ -20,7 +20,7 @@ export default function Page() {
 
     reader.onloadend = async () => {
       try {
-        const response = await fetch("https://bm-scanner-insecte.vercel.app/api/analyze", {
+        const response = await fetch("/api/analyze", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -31,12 +31,18 @@ export default function Page() {
         });
 
         const data = await response.json();
+
+        if (!response.ok) {
+          setResult(data.result || "Erreur lors de l’analyse.");
+          return;
+        }
+
         setResult(data.result || "Aucun résultat.");
       } catch (error) {
         setResult("Erreur lors de l’analyse.");
-      } finally {
-        setLoading(false);
       }
+
+      setLoading(false);
     };
 
     reader.readAsDataURL(file);
@@ -50,17 +56,13 @@ export default function Page() {
         type="file"
         accept="image/*"
         capture="environment"
-        onChange={(e) => {
-          const selectedFile = e.target.files?.[0] ?? null;
-          setFile(selectedFile);
-          setResult(selectedFile ? `Image choisie : ${selectedFile.name}` : "");
-        }}
+        onChange={(e) => setFile(e.target.files[0])}
       />
 
       <br />
       <br />
 
-      <button onClick={analyze} disabled={loading}>
+      <button onClick={analyze}>
         {loading ? "Analyse..." : "Identifier l'insecte"}
       </button>
 
