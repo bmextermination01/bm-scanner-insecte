@@ -13,7 +13,7 @@ export default function Page() {
 
     reader.onloadend = async () => {
 
-      const response = await fetch("/api/analyze", {
+      const response = await fetch("https://bm-scanner-insecte.vercel.app/api/analyze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
