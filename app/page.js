@@ -33,14 +33,14 @@ export default function Page() {
         const data = await response.json();
 
         if (!response.ok) {
-          setResult(data.details || data.result || "Erreur lors de l’analyse de l’image.");
+          setResult(data.details || data.result || "Erreur lors de l’analyse.");
           setLoading(false);
           return;
         }
 
         setResult(data.result || "Aucun résultat.");
       } catch (error) {
-        setResult(error.message || "Erreur lors de l’analyse de l’image.");
+        setResult("Erreur lors de l’analyse.");
       }
 
       setLoading(false);
@@ -50,8 +50,21 @@ export default function Page() {
   };
 
   return (
-    <main style={{ padding: 40 }}>
-      <h1>Scanner d'insecte — BM Extermination</h1>
+    <main style={{
+      maxWidth: "700px",
+      margin: "auto",
+      padding: "40px",
+      fontFamily: "Arial"
+    }}>
+
+      <h1 style={{fontSize:"32px"}}>
+        Scanner d'insecte – BM Extermination
+      </h1>
+
+      <p style={{marginBottom:"25px"}}>
+        Prenez une photo de l’insecte trouvé dans votre maison et notre système
+        d’analyse identifiera l’espèce et le niveau de risque.
+      </p>
 
       <input
         type="file"
@@ -60,16 +73,60 @@ export default function Page() {
         onChange={(e) => setFile(e.target.files[0] || null)}
       />
 
-      <br />
-      <br />
+      <br/><br/>
 
-      <button onClick={analyze} disabled={loading}>
+      <button
+        onClick={analyze}
+        disabled={loading}
+        style={{
+          padding:"12px 25px",
+          fontSize:"16px",
+          background:"#1f7a1f",
+          color:"white",
+          border:"none",
+          borderRadius:"6px",
+          cursor:"pointer"
+        }}
+      >
         {loading ? "Analyse..." : "Identifier l'insecte"}
       </button>
 
-      <p style={{ marginTop: 20 }}>
+      <div style={{marginTop:"30px",fontSize:"18px"}}>
         {result}
-      </p>
+      </div>
+
+      <div style={{
+        marginTop:"40px",
+        padding:"20px",
+        background:"#f5f5f5",
+        borderRadius:"8px"
+      }}>
+
+        <h3>Besoin d'une intervention rapide ?</h3>
+
+        <p>
+          BM Extermination offre des services professionnels pour
+          éliminer les insectes et nuisibles dans votre maison.
+        </p>
+
+        <a
+          href="tel:15144972667"
+          style={{
+            display:"inline-block",
+            marginTop:"10px",
+            padding:"12px 20px",
+            background:"#cc0000",
+            color:"white",
+            textDecoration:"none",
+            borderRadius:"6px",
+            fontWeight:"bold"
+          }}
+        >
+          📞 Appeler BM Extermination
+        </a>
+
+      </div>
+
     </main>
   );
 }
