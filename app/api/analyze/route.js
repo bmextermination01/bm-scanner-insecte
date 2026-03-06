@@ -16,38 +16,21 @@ export async function POST(req) {
       );
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: "Identifie cet insecte. Donne son nom probable, le niveau de risque dans une maison au Québec et si un exterminateur est recommandé. Réponse courte et claire en français.",
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: image,
-              },
-            },
-          ],
-        },
-      ],
-      max_tokens: 300,
-    });
+    const response = await fetch("https://bm-scanner-insecte.vercel.app/api/analyze", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    image: reader.result,
+  }),
+});
 
-    return Response.json({
-      result: response.choices?.[0]?.message?.content || "Aucun résultat.",
-    });
-  } catch (error) {
-    return Response.json(
-      {
-        result: "Erreur lors de l’analyse de l’image.",
-        details: error?.message || "Erreur inconnue",
-      },
-      { status: 500 }
-    );
-  }
+const data = await response.json();
+
+if (!response.ok) {
+  setResult(data.details || data.result || "Erreur lors de l’analyse.");
+  return;
 }
+
+setResult(data.result || "Aucun résultat.");
